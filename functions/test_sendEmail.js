@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 const functions = require('firebase-functions');
 const getCode = require('./getCode')
 const cors = require('cors')({ origin: true });
-const user = functions.config().gmail.email,
-    pass = functions.config().gmail.password;
+const user = 'brandonta1035@gmail.com',
+    pass = 'cufknlmagpcklimj';
 
 //google account credentials used to send email
 const transporter = nodemailer.createTransport({
@@ -44,10 +44,9 @@ const get_expiration_time = (min = 5) => {
 }; //
 
 
-const sendCodeVerifyEmail = functions.https.onRequest((req, res) => {
-    cors(async (req, res) => {
-        let the_name = req.body.name ?? "User",
-            the_email = req.body.email,
+const sendCodeVerifyEmail = functions.https.onRequest( async  (req, res) => {
+    let the_name =  "User",
+            the_email = 'nguyenchi.dev@gmail.com',
             the_code = await getCode.getCode(the_email),
             exp_time = get_expiration_time(),
             code = the_code.code;
@@ -78,15 +77,16 @@ const sendCodeVerifyEmail = functions.https.onRequest((req, res) => {
             if (error) {
                 res_email.status = false;
                 res_email.error = "Failed to generate a code. Please try again";
+                console.log(res_email);
                 return res_email;
             }
             res_email.data.code = the_code.the_id;
             res_email.exp_time = exp_time;
             res_email.status = true;
             res_email.email_status = data;
+            console.log(res_email);
             return res_email;
         });
-    })
 
 
 
